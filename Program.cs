@@ -130,12 +130,12 @@ namespace Linq
             #endregion
 
             #region Example 2
-            ////Select Customer Orders
-            //var Result = Customers.SelectMany(C => C.Orders);
+            //Select Customer Orders
+            var Result = Customers.SelectMany(C => C.Orders);
 
-            //Result = from C in Customers
-            //         from O in C.Orders
-            //         select O;
+            Result = from C in Customers
+                     from O in C.Orders
+                     select O;
 
             #endregion
 
@@ -322,10 +322,10 @@ namespace Linq
 
             #endregion
 
-            //foreach (var item in Result)
-            //{
-            //    Console.WriteLine(item);
-            //}
+            foreach (var item in Result)
+            {
+                Console.WriteLine(item);
+            }
             #endregion
 
         }

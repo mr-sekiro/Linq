@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Linq.Data;
@@ -16,8 +18,8 @@ namespace Linq
         //Local Sequence
         static ListGenerator()
         {
-            Products = new List<Product>()
             //Static Data
+            Products = new List<Product>()
             {
 
                       new Product() {ProductID = 1, ProductName = "Chai", Category = "Beverages",
@@ -175,9 +177,12 @@ namespace Linq
                       new Product() { ProductID = 77, ProductName = "Original Frankfurter grüne Soße", Category = "Condiments",
                         UnitPrice = 13.0000M, UnitsInStock = 32 }
             };
+
             //Data from XML file
-            //XDocument.Load("C:\\Users\\Abdullah Hussein\\Desktop\\Basics\\Linq\\Data\\Customers.xml")
-            Customers = (from e in XDocument.Load("Customers.xml").Root.Elements("customer")// Default path =>  \Debug\net8.0\Customers.xml'.
+            //string path = "C:\\Users\\Abdullah Hussein\\Desktop\\Basics\\Linq\\Data\\Customers.xml";
+            string path = "Customers.xml"; // Default path =>  bin\Debug\net8.0\Customers.xml'.
+            var doc = XDocument.Load(path).Root.Elements("customer");
+            Customers = (from e in doc
                          select new Customer()
                          {
                              CustomerID = (string)e.Element("id"),
@@ -189,6 +194,8 @@ namespace Linq
                              Country = (string)e.Element("country"),
                              Phone = (string)e.Element("phone"),
                              Fax = (string)e.Element("fax"),
+
+                             //[Hybrid] Query Syntax
                              Orders = (
                                   from o in e.Elements("orders").Elements("order")
                                   select new Order
@@ -197,7 +204,45 @@ namespace Linq
                                       OrderDate = (DateTime)o.Element("orderdate"),
                                       Total = (decimal)o.Element("total")
                                   }).ToArray()
+
+                             ////Fluent syntax
+                             //Orders = e.Element("orders")
+                             //         .Elements("order")
+                             //         .Select(o => new Order
+                             //         {
+                             //             OrderID = (int)o.Element("id"),
+                             //             OrderDate = (DateTime)o.Element("orderdate"),
+                             //             Total = (decimal)o.Element("total")
+                             //         }).ToArray()    
                          }).ToList();
+
+            ////Data From JSON file
+            //string json = File.ReadAllText("Customers.json");
+            //var doc = JsonDocument.Parse(json);
+            //Customers = (from e in doc.RootElement.EnumerateArray()
+            //             select new Customer
+            //             {
+            //                 CustomerID = e.GetProperty("CustomerID").GetString(),
+            //                 CustomerName = e.GetProperty("CustomerName").GetString(),
+            //                 Address = e.GetProperty("Address").GetString(),
+            //                 City = e.GetProperty("City").GetString(),
+            //                 Region = e.GetProperty("Region").GetString(),
+            //                 PostalCode = e.GetProperty("PostalCode").GetString(),
+            //                 Country = e.GetProperty("Country").GetString(),
+            //                 Phone = e.GetProperty("Phone").GetString(),
+            //                 Fax = e.GetProperty("Fax").GetString(),
+            //                 Orders = (
+            //                     from o in e.GetProperty("Orders").EnumerateArray()
+            //                     select new Order
+            //                     {
+            //                         OrderID = o.GetProperty("OrderID").GetInt32(),
+            //                         OrderDate = o.GetProperty("OrderDate").GetDateTime(),
+            //                         Total = o.GetProperty("Total").GetDecimal()
+            //                     }).ToArray()
+            //             }).ToList();
+
+            //if JSON keys match C# properties => JsonSerializer.Deserialize
+            //Customers = JsonSerializer.Deserialize<List<Customer>>(json) ?? new List<Customer>();
         }
     }
 }
