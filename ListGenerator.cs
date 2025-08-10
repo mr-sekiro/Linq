@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Linq.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Linq.Data;
+using System.Xml.Serialization;
 
 namespace Linq
 {
@@ -215,6 +216,13 @@ namespace Linq
                              //             Total = (decimal)o.Element("total")
                              //         }).ToArray()    
                          }).ToList();
+            //if XML Elements match C# properties
+            //string xmlPath = "customers.xml";
+            //var serializer = new XmlSerializer(typeof(List<Customer>));
+            //using var reader = new StreamReader(xmlPath);
+            //Customers = (List<Customer>)serializer.Deserialize(reader);
+
+            //============================================//
 
             ////Data From JSON file
             //string json = File.ReadAllText("Customers.json");

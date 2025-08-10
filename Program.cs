@@ -1,10 +1,13 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Text.RegularExpressions;
+﻿using Linq.Data;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using static Linq.ListGenerator;
-using Linq.Data;
-using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Linq
 {
@@ -130,12 +133,12 @@ namespace Linq
             #endregion
 
             #region Example 2
-            //Select Customer Orders
-            var Result = Customers.SelectMany(C => C.Orders);
+            ////Select Customer Orders
+            //var Result = Customers.SelectMany(C => C.Orders);
 
-            Result = from C in Customers
-                     from O in C.Orders
-                     select O;
+            //Result = from C in Customers
+            //         from O in C.Orders
+            //         select O;
 
             #endregion
 
@@ -322,10 +325,228 @@ namespace Linq
 
             #endregion
 
-            foreach (var item in Result)
-            {
-                Console.WriteLine(item);
-            }
+            #region Casting Operators [Conversion] - Immediate Exceution
+            //List<Product> ResultList = Products.Where(p => p.UnitsInStock == 0).ToList();
+
+            //Product[] ResultArray = Products.Where(p => p.UnitsInStock == 0).ToArray();//casting to list
+
+            //Dictionary<long, Product> ResultDictionary1 = Products.Where(p => p.UnitsInStock == 0).ToDictionary(p => p.ProductID);//casting to Dictionary
+            //Dictionary<long, string> ResultDictionary2 = Products.Where(p => p.UnitsInStock == 0).ToDictionary(p => p.ProductID, p => p.ProductName);
+
+            //HashSet<Product> ResultHashSet = Products.Where(p => p.UnitsInStock == 0).ToHashSet(); //casting to HashSet
+
+            //ArrayList Obj = new ArrayList()
+            //{
+            //    "Abdullah",
+            //    "Hussein",
+            //    "Ismail",
+            //    1,
+            //    2,
+            //    3,
+            //    4,
+            //    5
+            //};
+            //var Result = Obj.OfType<string>();//Return the element of the specific type ,other elements will be ignored.
+
+            #endregion
+
+            #region Generation Operators - Deferred Execution
+            ////valid only with fluent syntax
+            ////Static Methods only (Enumerable Class)
+
+            //var result1 = Enumerable.Range(1, 50);//(0-49)
+            //var result2 = Enumerable.Range(50, 50);//(50-99)
+
+            //var result3 = Enumerable.Repeat(2, 5);//[2,2,2,2,2]
+            //var result4 = Enumerable.Repeat("Abdullah", 5);
+
+            //var result5 = Enumerable.Empty<string>().ToList(); //List<string> result5 = new List<string>();
+            #endregion
+
+            #region Set Operators - Deferred Execution
+            //var seq1 = Enumerable.Range(1, 20);
+            //var seq2 = Enumerable.Range(10, 21);
+            //var seqWithDublication = new List<int>() { 1, 2, 2, 1, 3, 4, 5, 5, 6, 7 };
+
+            #region Distinct
+            ////Get distinct Numbers
+            //var Result = seqWithDublication.Distinct();
+            #endregion
+
+            #region Union [Concat + Distinct]
+            ////Combine Numbers from seq1 and seq2 without duplicates
+            //var Result = seq1.Union(seq2);
+            #endregion
+
+            #region Concat[UnionAll]
+            ////Combine Numbers from seq1 and seq2 with duplicates
+            //var Result = seq1.Concat(seq2);
+            #endregion
+
+            #region Intersect
+            ////Get Numbers that exist in both collections
+            //var Result = seq1.Intersect(seq2);
+            #endregion
+
+            #region Except
+            ////Get Numbers from seq1 except those in the seq2
+            //var Result = seq1.Except(seq2);
+            #endregion
+
+            #endregion
+
+            #region Quantifier Operators [retuen bool]
+
+            #region Any
+            ////Check if there are any Products out of stock
+            //bool hasOutOfStock = Products.Any(P => P.UnitsInStock == 0);
+            #endregion
+
+            #region All
+            ////Check if all Products have price > 0
+            //bool allHavePrice = Products.All(P => P.UnitPrice > 0);
+            #endregion
+
+            #region Contains
+            ////Check if a category exists
+            //bool containsCategory = Products.Select(P => P.Category)
+            //    .Contains("Seafood");
+
+            #endregion
+
+            #region SequenceEqual
+            ////Check if a Two Sequence are Equal
+            //var seq1 = Enumerable.Range(1, 20);
+            //var seq2 = Enumerable.Range(1, 20);
+            //bool IsEqual = seq1.SequenceEqual(seq2);
+            #endregion
+
+            #endregion
+
+            #region Zipping Operator
+            ////Produces a sequence with elements from the Two Or Three specific sequences.
+            //string[] names = { "Abdullah", "Hussein", "Ismail", "Mohamed" };
+            //int[] numbers = { 1, 2, 3, 4 };
+            //char[] chars = { 'a', 'b', 'c', 'd' };
+
+            //var Result = Enumerable.Zip(names, numbers); //names.Zip(numbers);
+            //var Result2 = Enumerable.Zip(names, numbers, chars); //names.Zip(numbers,chars);
+
+            //var Result3 = names.Zip(numbers, (name, number) => new { index = number, Name = name });
+            #endregion
+
+            #region Grouping Operators
+
+            ////Query Syntax
+            ////Get Products Grouped by Category
+            //var Result = from P in Products
+            //             group P by P.Category;
+
+            ////Get Products in Stock Grouped by Category
+            //var Result2 = from P in Products
+            //              where P.UnitsInStock > 0
+            //              group P by P.Category;
+
+            ////Get Products in Stock Grouped by Category That Contains More Than 10 Product
+            //var Result3 = from P in Products
+            //              where P.UnitsInStock > 0
+            //              group P by P.Category
+            //              into category
+            //              where category.Count() > 10
+            //              select category;
+
+            ////Get Category Name of Products in Stock That Contains More Than 10 Product and Number of Product In Each Category
+            //var Result4 = from P in Products
+            //              where P.UnitsInStock > 0
+            //              group P by P.Category
+            //              into category
+            //              where category.Count() > 10
+            //              select new
+            //              {
+            //                  CategoryName = category.Key,
+            //                  Count = category.Count()
+            //              };
+
+
+            ////Fluent Syntax
+            //Result = Products.GroupBy(P => P.Category);
+
+            //Result2 = Products.Where(P => P.UnitsInStock > 0)
+            //                  .GroupBy(P => P.Category);
+
+            //Result3 = Products.Where(P => P.UnitsInStock > 0)
+            //                  .GroupBy(P => P.Category)
+            //                  .Where(C => C.Count() > 10);
+
+            //Result4 = Products.Where(P => P.UnitsInStock > 0)
+            //                  .GroupBy(P => P.Category)
+            //                  .Where(C => C.Count() > 10)
+            //                  .Select(X => new
+            //                  {
+            //                      CategoryName = X.Key,
+            //                      Count = X.Count()
+            //                  });
+
+
+
+            //foreach (var Category in Result3)
+            //{
+            //    Console.WriteLine(Category.Key);
+            //    foreach (var product in Category)
+            //    {
+            //        Console.WriteLine("\t" + product.ProductName);
+            //    }
+            //    Console.WriteLine("=========================");
+            //}
+
+            //foreach (var item in Result4)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+
+            #region Partitioning Operators
+            ////Take => Take Number of Elements From First Only
+            //var Result1 = Products.Where(P => P.UnitsInStock > 0).Take(10);
+
+            ////Skip => Skip Number of Elements From First And Get Rest Of Elements
+            //var Result2 = Products.Where(P => P.UnitsInStock > 0).Skip(10);
+            //var Page = Products.Skip(10).Take(10);
+
+            ////TakeLast => Take Number of Elements From Last Only
+            //Result1 = Products.Where(P => P.UnitsInStock > 0).TakeLast(10);
+
+            ////SkipLast => Skip Number of Elements From Last And Get Rest Of Elements
+            //Result2 = Products.Where(P => P.UnitsInStock > 0).SkipLast(10);
+
+            ////TakeWhile => Take Elements Till Element That do not Match Condition
+            //int[] numbers = { 5, 8, 4, 1, 2, 3, 7, 9, 6 };
+            //var Result3 = numbers.TakeWhile(num => num < 7);
+            //Result3 = numbers.TakeWhile((Num, I) => Num > I); //Indexed TakeWhile
+
+            ////SkipWhile => Skip Elements Till Element That do not Match Condition
+            //var Result4 = numbers.TakeWhile(num => num % 3 != 0);
+            #endregion
+
+            #region Let and Into [Valid only with query syntax]
+            ////Into => Restart Query With Introducing A new Range
+            //List<string> names = new List<string>() { "Abdullah", "Hussein", "Ismail", "Mohammed", "Ahmed" };
+            //var Result = from name in names
+            //             select Regex.Replace(name, "[AOUIEaouie]", "")
+            //             into namesWithoutVowel
+            //             where namesWithoutVowel.Length > 3
+            //             select namesWithoutVowel;
+            ////let => Continue Query With Added A new Range
+            //Result = from name in names
+            //         let namesWithoutVowel =  Regex.Replace(name, "[AOUIEaouie]", "")
+            //         where namesWithoutVowel.Length > 3
+            //         select namesWithoutVowel;
+            #endregion
+
+            //foreach (var item in Result)
+            //{
+            //    Console.WriteLine(item);
+            //}
             #endregion
 
         }
