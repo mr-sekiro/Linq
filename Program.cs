@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Numerics;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using System.Threading.Channels;
 using System.Xml.Linq;
 using static Linq.ListGenerator;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -28,6 +31,19 @@ namespace Linq
     {
         static void Main(string[] args)
         {
+            #region Anonymous type
+            ////anonymous type is a feature that allows you to create an object without explicitly defining a class for it.
+            ////These types are commonly used when working with LINQ queries, or when you need a quick data structure for temporary use. 
+            
+            ////The compiler generates a class at compile time with read-only properties.
+            ////Anonymous types are immutable – once created, their properties cannot be changed.
+            ////You must use var when declaring anonymous types, because the type has no name.
+            ////Commonly used in select statements of LINQ:
+
+            //var student = new { Name = "Ali", Age = 22 };
+            //Console.WriteLine($"Name: {student.Name}, Age: {student.Age}");
+
+            #endregion
             #region Linq syntax [Fluent , Query]
 
             //List<int> Numbers = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
